@@ -1,3 +1,6 @@
+var express = require('express');
+var app = express();
+
 var data = {
   Courses: [
     {
@@ -116,7 +119,7 @@ var data = {
       cr: "3",
       crn: "11208",
       seats: "0",
-      type: "Hybrid , Classroom and Online",
+      type: "Hybrid",
       days: "Tuesday",
       instructor: "Keshtkar, Fazel"
     },
@@ -126,7 +129,7 @@ var data = {
       cr: "3",
       crn: "12560",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Thursday",
       instructor: "Yadav, Nikhil"
     },
@@ -176,7 +179,7 @@ var data = {
       cr: "3",
       crn: "15468",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Thursday",
       instructor: "Scorce, Richard"
     },
@@ -216,7 +219,7 @@ var data = {
       cr: "3",
       crn: "12056",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Monday",
       instructor: "Scorce, Richard"
     },
@@ -226,7 +229,7 @@ var data = {
       cr: "3",
       crn: "15412",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Thursday",
       instructor: "Christoforou, Christoforos"
     },
@@ -236,7 +239,7 @@ var data = {
       cr: "3",
       crn: "12324",
       seats: "16",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Tuesday",
       instructor: "Sklar, Ronald"
     },
@@ -286,7 +289,7 @@ var data = {
       cr: "3",
       crn: "13323",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Friday",
       instructor: "Troja, Erald"
     },
@@ -306,7 +309,7 @@ var data = {
       cr: "3",
       crn: "13858",
       seats: "15",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Wednesday",
       instructor: "Naseem, Sajed"
     },
@@ -316,7 +319,7 @@ var data = {
       cr: "3",
       crn: "13856",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Tuesday",
       instructor: "Schmeelk, Suzanna"
     },
@@ -326,7 +329,7 @@ var data = {
       cr: "3",
       crn: "11500",
       seats: "16",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Monday",
       instructor: "Otero, Juan"
     },
@@ -336,7 +339,7 @@ var data = {
       cr: "3",
       crn: "14986",
       seats: "11",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Monday",
       instructor: "Schmeelk, Suzanna"
     },
@@ -366,7 +369,7 @@ var data = {
       cr: "3",
       crn: "14985",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Tuesday",
       instructor: "Schmeelk, Suzanna"
     },
@@ -536,7 +539,7 @@ var data = {
       cr: "3",
       crn: "11661",
       seats: "10",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Tuesday",
       instructor: "Servas, Frank"
     },
@@ -556,7 +559,7 @@ var data = {
       cr: "3",
       crn: "11662",
       seats: "0",
-      type: "Hybrid - Classroom and  Online",
+      type: "Hybrid",
       days: "Tuesday",
       instructor: "Servas, Frank"
     },
@@ -566,7 +569,7 @@ var data = {
       cr: "3",
       crn: "14987",
       seats: "0",
-      type: "Hybrid - Classroom and Online",
+      type: "Hybrid",
       days: "Wednesday",
       instructor: "Fetcher, Ronald"
     },
@@ -642,3 +645,105 @@ var data = {
     },
   ]
 }
+
+//queries the whole api file
+app.get('/courses', function(req, res) {
+  res.json(data["Courses"])
+})
+
+//query by course
+app.get('/courses/qcourse/:course', function(req,res) {
+  qcourse = req.params['course']
+  var filtered_data = data["Courses"].filter(d => d.course.toLowerCase().includes(qcourse))
+
+  res.json(filtered_data)
+})
+
+//query by Course title
+app.get('/courses/qtitle/:title', function(req,res) {
+  qtitle = req.params['title']
+  var filtered_data =  data["Courses"].filter(d => d.title.toLowerCase().includes(qtitle))
+
+  res.json(filtered_data)
+})
+
+//query by instructor
+app.get('/courses/qinstructor/:instructor', function(req, res) {
+  qinstructor = req.params['instructor']
+  var filtered_data = data["Courses"].filter(d => d.instructor.toLowerCase().includes(qinstructor))
+
+  res.json(filtered_data)
+})
+
+//query by class days
+app.get('/courses/qdays/:days', function(req, res) {
+  qdays = req.params['days']
+  var filtered_data = data["Courses"].filter(d => d.days.toLowerCase().includes(qdays))
+
+  res.json(filtered_data)
+})
+
+//query by seat availability
+app.get('/courses/qseat/:seats', function(req,res) {
+  qseat = req.params['seats']
+  var filtered_data = data["Courses"].filter(d => d.seats.toLowerCase().includes(qseat))
+
+  res.json(filtered_data)
+})
+
+//query by class type
+app.get('/courses/qtype/:type', function(req, res) {
+  qtype = req.params['type']
+  var filtered_data = data["Courses"].filter(d => d.type.toLowerCase().includes(qtype))
+
+  res.json(filtered_data)
+})
+
+app.get('/courses/qinstructor/:instructor/qcourse/:course', function(req, res) {
+  qinstructor = req.params['instructor']
+  qcourse = req.params['course']
+  var filtered_data = data["Courses"].filter(d =>
+    d.instructor.toLowerCase().includes(qinstructor) &&
+    d.course.toLowerCase().includes(qcourse))
+
+  res.json(filtered_data)
+})
+
+app.get('/courses/qinstructor/:instructor/qtitle/:title', function(req, res) {
+  qinstructor = req.params['instructor']
+  qtitle= req.params['title']
+  var filtered_data = data["Courses"].filter(d =>
+    d.instructor.toLowerCase().includes(qinstructor) &&
+    d.title.toLowerCase().includes(qtitle))
+
+  res.json(filtered_data)
+})
+
+app.get('/courses/qcourse/:course/qtitle/:title', function(req, res) {
+  qcourse = req.params['course']
+  qtitle= req.params['title']
+  var filtered_data = data["Courses"].filter(d =>
+    d.course.toLowerCase().includes(qcourse) &&
+    d.title.toLowerCase().includes(qtitle))
+
+  res.json(filtered_data)
+})
+
+//starts server
+app.listen(3000, function(){
+  console.log('Example app listening on port 3000!')
+})
+
+// var request = new XMLHttpRequest();
+// var url = 'http://127.0.0.1:3000/courses'
+// request.open('GET', url, true);
+//
+// request.onload = function() {
+//   const data = JSON.parse(request.responseText).Courses;
+//   console.log(data);
+//
+//   document.getElementById("load").innerHTML = table;
+//
+// }
+//
+// request.send();
